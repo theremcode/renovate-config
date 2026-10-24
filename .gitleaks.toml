@@ -1,0 +1,34 @@
+title = "gitleaks-config"
+
+# Start van de volledige upstream-regelset en trek daar alleen geverifieerde
+# valse positieven van af. Nooit .env allowlisten: die is gitignored, maar
+# raakt hij ooit per ongeluk gestaged, dan moet de scan hem vangen.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Gegenereerde build-output en dependencies. Niet in git, maar een scan van de werkmap (gitleaks dir) loopt er wel doorheen."
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)dist/''',
+  '''(^|/)\.next/''',
+  '''(^|/)\.venv/''',
+  '''(^|/)__pycache__/''',
+  '''(^|/)\.terraform/''',
+  '''(^|/)test-results/''',
+  '''(^|/)playwright-report/''',
+  '''(^|/)coverage/''',
+]
+
+[[allowlists]]
+description = "Lockfiles: integriteitshashes en checksums, nooit credentials."
+paths = [
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)go\.sum$''',
+  '''(^|/)uv\.lock$''',
+  '''(^|/)poetry\.lock$''',
+  '''(^|/)\.terraform\.lock\.hcl$''',
+]
+
+# Valse positieven van deze app hieronder, elk met een description die zegt
+# waarom het geen secret is. Liever een smalle regex dan een heel pad.

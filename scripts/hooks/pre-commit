@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Blokkeert commits met secrets erin. Eenmalig aanzetten per kloon:
+#   git config core.hooksPath scripts/hooks
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+pre-commit: gitleaks is niet geïnstalleerd — de gestagede wijzigingen zijn NIET gescand.
+
+Installeer hem en commit opnieuw:
+  brew install gitleaks
+
+Toch committen (alleen als je het zeker weet): git commit --no-verify
+EOF
+  exit 1
+fi
+
+if ! gitleaks git --staged --config .gitleaks.toml --redact --no-banner -v; then
+  cat >&2 <<'EOF'
+
+pre-commit: gitleaks vond een secret in de gestagede wijzigingen — commit afgebroken.
+
+Haal het secret eruit (zet het in .env.local, die is gitignored) en stage opnieuw.
+Een echte valse positieve hoort in de allowlist van .gitleaks.toml.
+EOF
+  exit 1
+fi
