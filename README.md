@@ -26,7 +26,7 @@ De Renovate GitHub App moet op de repo geïnstalleerd zijn
 | Wekelijks, maandag voor 7:00, alle niet-majors in één PR | Weinig ruis |
 | Patch, minor, digest: automerge als **alle** CI-checks groen zijn | Actueel blijven zonder klikken |
 | Majors: eigen PR, nooit automerge | Daar fixen we wat breekt |
-| Pas na 3 dagen (`minimumReleaseAge`) | Gekaapte releases worden meestal binnen een dag of twee ingetrokken; wie meteen pakt, haalt ze binnen |
+| Pas na 1 dag (`minimumReleaseAge`) | Een gekaapte release wordt vaak binnen uren ontdekt en ingetrokken; één dag wachten vangt de meeste, zonder ver achter te lopen |
 | Security-fixes (OSV): direct, buiten schema, automerge | Een bekende CVE wacht niet op maandag |
 | Lockfile-onderhoud wekelijks | Ververst ook transitieve afhankelijkheden |
 | `rangeStrategy: bump` | `package.json`, `go.mod` en Terraform-constraints laten zien wat er echt draait |

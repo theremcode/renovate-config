@@ -11,7 +11,7 @@
   ],
   "schedule": ["before 7am on monday"],
   "rangeStrategy": "bump",
-  "minimumReleaseAge": "3 days",
+  "minimumReleaseAge": "1 day",
   "internalChecksFilter": "strict",
   "prHourlyLimit": 0,
   "prConcurrentLimit": 10,
