@@ -1,0 +1,66 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Gedeelde Renovate-preset voor alle theremcode-repos: altijd de nieuwste versies, CI beslist.",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":timezone(Europe/Amsterdam)",
+    "group:allNonMajor",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "schedule": ["before 7am on monday"],
+  "rangeStrategy": "bump",
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 10,
+  "platformAutomerge": false,
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "schedule": ["at any time"],
+    "minimumReleaseAge": null,
+    "automerge": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "schedule": ["before 7am on monday"]
+  },
+  "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths", "npmDedupe"],
+  "packageRules": [
+    {
+      "description": "Patch, minor, digest en pin mergen vanzelf zodra alle CI-checks groen zijn.",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "automerge": true
+    },
+    {
+      "description": "Majors krijgen een eigen PR en worden nooit automatisch gemerged.",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major"]
+    },
+    {
+      "description": "De go-directive en toolchain in go.mod gaan mee naar de nieuwste Go.",
+      "matchDatasources": ["golang-version"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Een PostgreSQL-major kan niet op een bestaande datamap draaien: dump en restore nodig.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["postgres", "postgis/postgis", "pgvector/pgvector"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major", "database-migratie"],
+      "prBodyNotes": [
+        "⚠️ **PostgreSQL-major.** Een nieuwe major start niet op een datamap van de vorige. Maak eerst een dump, upgrade, en zet de dump terug — niet zomaar mergen."
+      ]
+    },
+    {
+      "description": "Eigen app-images worden door de CI van de repo zelf getagd, niet door Renovate.",
+      "matchPackageNames": ["acrtheremcode.azurecr.io/**", "ghcr.io/theremcode/**"],
+      "enabled": false
+    }
+  ]
+}
