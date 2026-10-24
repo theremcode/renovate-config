@@ -9,7 +9,7 @@
     "docker:pinDigests",
     "helpers:pinGitHubActionDigests"
   ],
-  "schedule": ["before 7am on monday"],
+  "schedule": ["before 7am on monday", "before 7am on thursday"],
   "rangeStrategy": "bump",
   "minimumReleaseAge": "1 day",
   "internalChecksFilter": "strict",

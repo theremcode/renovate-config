@@ -23,7 +23,7 @@ De Renovate GitHub App moet op de repo geïnstalleerd zijn
 
 | Regel | Waarom |
 |---|---|
-| Wekelijks, maandag voor 7:00, alle niet-majors in één PR | Weinig ruis |
+| Twee keer per week, maandag en donderdag voor 7:00, alle niet-majors in één PR | Bijblijven zonder dagelijkse ruis |
 | Patch, minor, digest: automerge als **alle** CI-checks groen zijn | Actueel blijven zonder klikken |
 | Majors: eigen PR, nooit automerge | Daar fixen we wat breekt |
 | Pas na 1 dag (`minimumReleaseAge`) | Een gekaapte release wordt vaak binnen uren ontdekt en ingetrokken; één dag wachten vangt de meeste, zonder ver achter te lopen |
