@@ -23,12 +23,13 @@ De Renovate GitHub App moet op de repo geïnstalleerd zijn
 
 | Regel | Waarom |
 |---|---|
-| Twee keer per week, maandag en donderdag voor 7:00, alle niet-majors in één PR | Bijblijven zonder dagelijkse ruis |
+| Eén keer per week, maandag voor 7:00, alle niet-majors in één PR | Bijblijven zonder dagelijkse ruis, en binnen de 2.000 Actions-minuten per maand |
+| Alleen rebasen bij een conflict (`rebaseWhen: conflicted`) | Anders draait elke open PR zijn hele CI opnieuw zodra `main` verandert; dat was de grootste minutenvreter |
 | Patch, minor, digest: automerge als **alle** CI-checks groen zijn | Actueel blijven zonder klikken |
 | Majors: eigen PR, nooit automerge | Daar fixen we wat breekt |
 | Pas na 1 dag (`minimumReleaseAge`) | Een gekaapte release wordt vaak binnen uren ontdekt en ingetrokken; één dag wachten vangt de meeste, zonder ver achter te lopen |
 | Security-fixes (OSV): direct, buiten schema, automerge | Een bekende CVE wacht niet op maandag |
-| Lockfile-onderhoud wekelijks | Ververst ook transitieve afhankelijkheden |
+| Lockfile-onderhoud maandelijks (de 1e, voor 7:00) | Ververst ook transitieve afhankelijkheden; een kwetsbare transitieve dependency komt via de security-regel toch direct |
 | `rangeStrategy: bump` | `package.json`, `go.mod` en Terraform-constraints laten zien wat er echt draait |
 | Docker-images en Actions op digest/SHA | OS-patches in basisimages komen als PR binnen; Actions zijn niet onder je handen te vervangen |
 | PostgreSQL-major: label `database-migratie` en waarschuwing | Een nieuwe major start niet op de oude datamap |
@@ -46,6 +47,11 @@ Merge naar `main` betekent in de meeste repos ook uitrol naar productie. Hoe
 beter de CI (unit- én e2e-tests), hoe veiliger automerge is.
 
 ## Een regel per repo afwijken
+
+Een app waar patches direct moeten (zoals koline) zet in zijn eigen
+`renovate.json` `"schedule": ["at any time"]` en `"rebaseWhen": "behind-base-branch"`:
+updates komen dan binnen zodra ze een dag oud zijn, en elke PR wordt getest op de
+laatste `main`.
 
 Voeg in de `renovate.json` van die repo `packageRules` of `ignoreDeps` toe; die
 gaan boven de preset. Bijvoorbeeld automerge uit:

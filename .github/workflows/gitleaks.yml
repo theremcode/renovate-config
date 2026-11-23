@@ -13,10 +13,17 @@ permissions:
   # elke PR-scan — ook een schone.
   pull-requests: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Een PR-run is achterhaald zodra er een nieuwe commit komt. Op main niet: daar
+  # zou afschieten een deploy halverwege stoppen.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   scan:
     name: secret scan
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
